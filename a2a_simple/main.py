@@ -38,7 +38,7 @@ def main():
     agent_card = AgentCard(
         name="Calculator Agent",
         description="A simple agent that calculates the result of a mathematical expression",
-        url="http://Geerts-MacBook-Air-2.local:9997/",
+        url="http://localhost:9997/",
         defaultInputModes=["text"],
         defaultOutputModes=["text"],
         skills=[skill],
