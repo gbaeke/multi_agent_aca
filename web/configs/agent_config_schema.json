@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Agent Configuration Schema",
+  "description": "Schema for agent configuration files",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Display name of the agent",
+      "minLength": 1,
+      "examples": ["Conversation Agent", "News Agent", "Weather Agent"]
+    },
+    "instructions": {
+      "type": "string",
+      "description": "System instructions for the agent's behavior",
+      "minLength": 1
+    },
+    "model": {
+      "type": "string",
+      "description": "The AI model to use for this agent",
+      "minLength": 1,
+      "examples": ["gpt-4.1-nano", "gpt-4o-mini", "claude-3-sonnet"]
+    },
+    "tools": {
+      "type": "array",
+      "description": "List of available tools for the agent",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true,
+      "minItems": 0,
+      "examples": [
+        ["get_current_time", "get_current_date"],
+        ["web_search", "get_current_date"],
+        ["get_current_weather", "get_current_temperature"]
+      ]
+    }
+  },
+  "required": [
+    "name",
+    "instructions",
+    "model",
+    "tools"
+  ],
+  "additionalProperties": false
+} 

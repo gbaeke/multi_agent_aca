@@ -1,0 +1,10 @@
+openai
+openai-agents
+python-dotenv
+jsonschema
+redis
+a2a-sdk
+sqlalchemy
+azure-ai-projects
+azure-identity
+azure-ai-agents
