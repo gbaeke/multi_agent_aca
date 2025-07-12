@@ -6,6 +6,8 @@ A basic Agent-to-Agent (A2A) implementation featuring a calculator agent that ru
 
 - `agent_executor.py` - Contains the core agent logic and executor
 - `main.py` - Server setup and configuration
+- `test_client.py`- Connect to the A2A server and send message
+- `requirements.txt` - Python packages 
 
 ## Components
 
@@ -30,11 +32,21 @@ A basic Agent-to-Agent (A2A) implementation featuring a calculator agent that ru
 
 ## Usage
 
-```bash
-python main.py
-```
+Install packages with `pip install -r requirements.txt`
 
-Agent will be available at `http://localhost:9997/`
+1. **Start the agent server:**
+   ```bash
+   python main.py
+   ```
+   Agent will be available at `http://localhost:9997/`
+
+2. **Test the agent (in a different terminal):**
+   ```bash
+   # From the project root directory
+   python test_client.py
+   ```
+   
+   **Note:** Update the `BASE_URL` in `test_client.py` from `http://localhost:9998` to `http://localhost:9997` to match the agent's port.
 
 ## Status
 

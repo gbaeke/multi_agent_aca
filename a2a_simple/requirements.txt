@@ -1,0 +1,5 @@
+openai
+openai-agents
+python-dotenv
+a2a-sdk
+sqlalchemy
