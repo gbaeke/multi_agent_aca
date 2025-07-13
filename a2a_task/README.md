@@ -60,7 +60,7 @@ Install packages with `pip install -r requirements.txt`
    python test_client.py
    ```
    
-   The client will connect to the server and send a test calculation request.
+   The client will connect to the server and ask you for input.
 
 ## Features
 
