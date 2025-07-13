@@ -53,7 +53,6 @@ class CalculatorAgentExecutor(AgentExecutor):
                     name='calculator_result',
                 )
 
-                # complete the task
                 await updater.complete()
                 
             else:

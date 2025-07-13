@@ -2,6 +2,8 @@
 
 A basic Agent-to-Agent (A2A) implementation featuring a calculator agent that runs as a web service.
 
+🤫 It's not actually a calculator, it just pretends to be...
+
 ## Files
 
 - `agent_executor.py` - Contains the core agent logic and executor
@@ -13,7 +15,7 @@ A basic Agent-to-Agent (A2A) implementation featuring a calculator agent that ru
 
 ### CalculatorAgent
 - Simple agent class with an `invoke()` method
-- Currently returns placeholder text (not yet implemented)
+- Currently returns placeholder text (calculator not yet implemented - on purpose 😊)
 - Intended to handle mathematical calculations
 
 ### CalculatorAgentExecutor
@@ -47,6 +49,12 @@ Install packages with `pip install -r requirements.txt`
    ```
    
    **Note:** Update the `BASE_URL` in `test_client.py` from `http://localhost:9998` to `http://localhost:9997` to match the agent's port.
+
+### Check Agent Card
+
+Use `ngrok http 9997`(install ngrok if needed) and use the provided https adress with the A2A Protocol Validator at https://a2aprotocol.ai/a2a-protocol-validator.
+
+⚠️ You can also use https://github.com/a2aproject/a2a-inspector on your local machine to connect to the agent, check the Agent Card, exchange messages and view the raw JSON-RPC payloads.
 
 ## Status
 

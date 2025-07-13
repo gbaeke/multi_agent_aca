@@ -8,3 +8,4 @@ sqlalchemy
 azure-ai-projects
 azure-identity
 azure-ai-agents
+click

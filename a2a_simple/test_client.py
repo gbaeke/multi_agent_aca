@@ -11,26 +11,25 @@ from a2a.types import (
     SendMessageRequest,
     TextPart,
 )
+import click
 
 PUBLIC_AGENT_CARD_PATH = "/.well-known/agent.json"
-BASE_URL = "http://localhost:9997"
 
-
-async def main() -> None:
+async def run_client(port: int, question: str) -> None:
     # Configure client with longer timeout to match agent execution time
     timeout = httpx.Timeout(200.0, read=200.0, write=30.0, connect=10.0)
     async with httpx.AsyncClient(timeout=timeout) as httpx_client:
         # Initialize A2ACardResolver
         resolver = A2ACardResolver(
             httpx_client=httpx_client,
-            base_url=BASE_URL,
+            base_url=f"http://localhost:{port}",
         )
 
         final_agent_card_to_use: AgentCard | None = None
 
         try:
             print(
-                f"Fetching public agent card from: {BASE_URL}{PUBLIC_AGENT_CARD_PATH}"
+                f"Fetching public agent card from: http://localhost:{port}{PUBLIC_AGENT_CARD_PATH}"
             )
             _public_card = await resolver.get_agent_card()
             print("Fetched public agent card")
@@ -50,7 +49,7 @@ async def main() -> None:
         message_payload = Message(
             role=Role.user,
             messageId=str(uuid.uuid4()),
-            parts=[Part(root=TextPart(text="What is 2+2?"))],
+            parts=[Part(root=TextPart(text=question))],
         )
         request = SendMessageRequest(
             id=str(uuid.uuid4()),
@@ -65,7 +64,15 @@ async def main() -> None:
         print(response.model_dump_json(indent=2))
 
 
+
+@click.command()
+@click.option('--port', default=9997, help='Port of the agent.')
+@click.option('--question', prompt='Your question', help='The question to ask the agent.')
+def main(port: int, question: str) -> None:
+    asyncio.run(run_client(port, question))
+
+
 if __name__ == "__main__":
     import asyncio
-
-    asyncio.run(main())
+    
+    main()
