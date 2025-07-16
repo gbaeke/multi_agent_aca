@@ -158,3 +158,8 @@ dmypy.json
 Network Trash Folder
 Temporary Items
 .apdisk
+
+
+# Chainlit
+.chainlit/
+.files/

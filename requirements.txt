@@ -9,3 +9,6 @@ azure-ai-projects
 azure-identity
 azure-ai-agents
 click
+fastmcp
+semantic-kernel
+chainlit

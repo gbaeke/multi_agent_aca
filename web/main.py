@@ -1,10 +1,15 @@
 import logging
+import os
 import uvicorn
+from urllib.parse import urlparse
 from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
 from a2a.server.tasks import InMemoryTaskStore
 from a2a.types import AgentCapabilities, AgentCard, AgentSkill
 from agent_executor import WebAgentExecutor
+
+# Configuration from environment variables
+WEB_A2A_BASE_URL = os.getenv("WEB_A2A_BASE_URL", "http://localhost:9999")
 
 
 def main():
@@ -27,6 +32,10 @@ def main():
     # Keep your application logs visible
     logging.getLogger('agent_executor').setLevel(logging.INFO)
 
+    # Parse URL to extract port
+    parsed_url = urlparse(WEB_A2A_BASE_URL)
+    port = parsed_url.port or 9999  # Default to 9999 if no port specified
+
     skill = AgentSkill(
         id="web_search",
         name="Web Search",
@@ -38,7 +47,7 @@ def main():
     agent_card = AgentCard(
         name="Web Search Agent",
         description="A simple agent that searches the web for information",
-        url="http://Geerts-MacBook-Air-2.local:9999/",
+        url=WEB_A2A_BASE_URL + ("/" if not WEB_A2A_BASE_URL.endswith("/") else ""),
         defaultInputModes=["text"],
         defaultOutputModes=["text"],
         skills=[skill],
@@ -56,7 +65,8 @@ def main():
         agent_card=agent_card,
     )
 
-    uvicorn.run(server.build(), host="0.0.0.0", port=9999)
+    logging.info(f"Starting Web A2A server at {WEB_A2A_BASE_URL}")
+    uvicorn.run(server.build(), host="0.0.0.0", port=port)
 
 
 if __name__ == "__main__":
