@@ -1,0 +1,6 @@
+openai-agents
+python-dotenv
+jsonschema
+redis
+a2a-sdk
+uvicorn

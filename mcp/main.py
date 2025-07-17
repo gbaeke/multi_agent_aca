@@ -34,7 +34,7 @@ PUBLIC_AGENT_CARD_PATH = "/.well-known/agent.json"
 # Configuration from environment variables
 WEB_A2A_BASE_URL = os.getenv("WEB_A2A_BASE_URL", "http://localhost:9999")
 RAG_A2A_BASE_URL = os.getenv("RAG_A2A_BASE_URL", "http://localhost:9998")
-MCP_PORT = os.getenv("MCP_PORT", 8080)
+MCP_PORT = os.getenv("MCP_PORT", 7777)
 
 # Shared HTTP client with proper connection management
 _http_client = None
@@ -230,6 +230,7 @@ def main():
     logger.info("Starting FastMCP server...")
     logger.info(f"Web A2A agent configured at: {WEB_A2A_BASE_URL}")
     logger.info(f"RAG A2A agent configured at: {RAG_A2A_BASE_URL}")
+    logger.info(f"MCP server will run on port: {MCP_PORT}")
     
     async def cleanup_on_shutdown():
         """Cleanup resources on shutdown"""
@@ -250,8 +251,12 @@ def main():
     
     try:
         # Run the server with HTTP transport (not stdio)
-        # Note: Timeout configuration should be done on the client side
-        mcp.run(transport="streamable-http", host="localhost", port=MCP_PORT)
+        # Configure for container apps deployment
+        mcp.run(
+            transport="http", 
+            host="0.0.0.0", 
+            port=int(MCP_PORT)
+        )
     finally:
         # Ensure cleanup happens
         asyncio.run(cleanup_on_shutdown())

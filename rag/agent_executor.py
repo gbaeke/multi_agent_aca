@@ -2,7 +2,7 @@ import os
 import logging
 from dotenv import load_dotenv
 from azure.ai.projects import AIProjectClient
-from azure.identity import DefaultAzureCredential
+from azure.identity import DefaultAzureCredential, ManagedIdentityCredential
 from azure.ai.agents.models import ListSortOrder
 from a2a.server.agent_execution import AgentExecutor
 from a2a.server.agent_execution.context import RequestContext
@@ -28,6 +28,7 @@ class RAGAgent:
         
         endpoint = os.getenv("FOUNDRY_PROJECT")
         agent_id = os.getenv("ASSISTANT_ID")
+        client_id = os.getenv("CLIENT_ID")
 
         if not endpoint:
             logger.error("Environment Error: FOUNDRY_PROJECT is not set")
@@ -36,9 +37,17 @@ class RAGAgent:
             logger.error("Environment Error: ASSISTANT_ID is not set")
             raise EnvironmentError("ASSISTANT_ID is not set in the environment or .env file.")
 
+        # Use ManagedIdentityCredential if CLIENT_ID is set, otherwise use DefaultAzureCredential
+        if client_id:
+            logger.info(f"Using ManagedIdentityCredential with client ID: {client_id}")
+            credential = ManagedIdentityCredential(client_id=client_id)
+        else:
+            logger.info("Using DefaultAzureCredential")
+            credential = DefaultAzureCredential()
+
         logger.info(f"Connecting to Azure AI Project: {endpoint}")
         self.project = AIProjectClient(
-            credential=DefaultAzureCredential(),
+            credential=credential,
             endpoint=endpoint)
 
         logger.info(f"Getting agent with ID: {agent_id}")

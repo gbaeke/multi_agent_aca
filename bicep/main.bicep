@@ -34,9 +34,8 @@ resource account 'Microsoft.CognitiveServices/accounts@2025-04-01-preview' = {
     name: 'S0'
   }
   properties: {
-    // Networking
-    publicNetworkAccess: 'Disabled'
-    
+    publicNetworkAccess: 'Enabled'
+
     networkAcls: {
       bypass: 'AzureServices'
       defaultAction: 'Deny'
@@ -229,7 +228,7 @@ resource modelDeployment 'Microsoft.CognitiveServices/accounts/deployments@2024-
   parent: account
   name: 'gpt-4o-mini'
   sku : {
-    capacity: 1
+    capacity: 30
     name: 'GlobalStandard'
   }
   properties: {
@@ -270,6 +269,48 @@ resource containerAppsEnv 'Microsoft.App/managedEnvironments@2023-05-01' = {
   }
 
   
+}
+
+/*
+  Step 8: Deploy azure container registry
+*/
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2025-04-01' = {
+  name: 'acr${uniqueString(subscription().id)}'
+  location: location
+  sku: {
+    name: 'Basic'
+  }
+  properties: {
+    adminUserEnabled: true
+  }
+}
+
+// create user assigned identity
+resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2024-11-30' = {
+  name: 'uami-${uniqueString(subscription().id)}'
+  location: location
+}
+
+// Role assignment to grant AcrPull permission to the managed identity
+resource acrPullRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(containerRegistry.id, userAssignedIdentity.id, 'AcrPull')
+  scope: containerRegistry
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d')
+    principalId: userAssignedIdentity.properties.principalId
+    principalType: 'ServicePrincipal'
+  }
+}
+
+// Role assignment to grant Azure AI Developer permission to the managed identity
+resource aiDeveloperRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(account.id, userAssignedIdentity.id, 'AzureAIDeveloper')
+  scope: account
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '64702f94-c441-49e6-a78b-ef80e0188fee')
+    principalId: userAssignedIdentity.properties.principalId
+    principalType: 'ServicePrincipal'
+  }
 }
 
 

@@ -9,7 +9,8 @@ from a2a.types import AgentCapabilities, AgentCard, AgentSkill
 from agent_executor import WebAgentExecutor
 
 # Configuration from environment variables
-WEB_A2A_BASE_URL = os.getenv("WEB_A2A_BASE_URL", "http://localhost:9999")
+WEB_A2A_BASE_URL = os.getenv("WEB_A2A_BASE_URL", "http://localhost")
+INTERNAL_PORT = os.getenv("INTERNAL_PORT", 9999)
 
 
 def main():
@@ -32,10 +33,6 @@ def main():
     # Keep your application logs visible
     logging.getLogger('agent_executor').setLevel(logging.INFO)
 
-    # Parse URL to extract port
-    parsed_url = urlparse(WEB_A2A_BASE_URL)
-    port = parsed_url.port or 9999  # Default to 9999 if no port specified
-
     skill = AgentSkill(
         id="web_search",
         name="Web Search",
@@ -47,7 +44,7 @@ def main():
     agent_card = AgentCard(
         name="Web Search Agent",
         description="A simple agent that searches the web for information",
-        url=WEB_A2A_BASE_URL + ("/" if not WEB_A2A_BASE_URL.endswith("/") else ""),
+        url=f"{WEB_A2A_BASE_URL}:{INTERNAL_PORT}",
         defaultInputModes=["text"],
         defaultOutputModes=["text"],
         skills=[skill],
@@ -66,7 +63,7 @@ def main():
     )
 
     logging.info(f"Starting Web A2A server at {WEB_A2A_BASE_URL}")
-    uvicorn.run(server.build(), host="0.0.0.0", port=port)
+    uvicorn.run(server.build(), host="0.0.0.0", port=INTERNAL_PORT)
 
 
 if __name__ == "__main__":

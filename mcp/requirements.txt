@@ -1,0 +1,4 @@
+python-dotenv
+a2a-sdk
+sqlalchemy
+fastmcp

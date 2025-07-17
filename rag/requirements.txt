@@ -1,0 +1,14 @@
+# Azure AI Projects SDK for agents and project management
+azure-ai-projects
+
+# Azure Identity for authentication
+azure-identity
+
+# Environment variable management
+python-dotenv
+
+# A2A SDK for the agent framework
+a2a-sdk
+
+# ASGI web server
+uvicorn

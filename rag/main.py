@@ -9,7 +9,8 @@ from a2a.types import AgentCapabilities, AgentCard, AgentSkill
 from agent_executor import RagAgentExecutor
 
 # Configuration from environment variables
-RAG_A2A_BASE_URL = os.getenv("RAG_A2A_BASE_URL", "http://localhost:9998")
+RAG_A2A_BASE_URL = os.getenv("RAG_A2A_BASE_URL", "http://localhost")
+INTERNAL_PORT = os.getenv("INTERNAL_PORT", 9998)
 
 
 def main():
@@ -47,7 +48,7 @@ def main():
     agent_card = AgentCard(
         name="RAG Agent",
         description="A simple agent that searches the knowledge base for information",
-        url=RAG_A2A_BASE_URL + ("/" if not RAG_A2A_BASE_URL.endswith("/") else ""),
+        url=f"{RAG_A2A_BASE_URL}:{INTERNAL_PORT}",
         defaultInputModes=["text"],
         defaultOutputModes=["text"],
         skills=[skill],
@@ -66,7 +67,7 @@ def main():
     )
 
     logging.info(f"Starting RAG A2A server at {RAG_A2A_BASE_URL}")
-    uvicorn.run(server.build(), host="0.0.0.0", port=port)
+    uvicorn.run(server.build(), host="0.0.0.0", port=INTERNAL_PORT)
 
 
 if __name__ == "__main__":
