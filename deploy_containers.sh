@@ -224,7 +224,7 @@ deploy_container() {
                 --max-replicas 3 \
                 --env-vars \
                     "OPENAI_API_KEY=secretref:openai-api-key" \
-                    "MCP_SERVER_URL=https://ca-mcp.internal.$DEFAULT_DOMAIN/mcp" \
+                    "MCP_SERVER_URL=http://ca-mcp/mcp" \
                 --secrets \
                     "openai-api-key=${OPENAI_API_KEY:-your-openai-api-key}"
             ;;
